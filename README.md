@@ -35,3 +35,10 @@ The trade-off is that `get()` returns `undefined` for both "missing" and "explic
 - `/` on an object names the empty-string key `""`, not the root. On an array it is not present (the empty string is not a valid array index).
 - Array indices with a leading zero (e.g. `/01`) are treated as not present, per the RFC's notion of a member name. We do not coerce them.
 - `~1` decodes to `/` and `~0` decodes to `~` by default. Pass `{ decodeTilde: false }` to read segments verbatim. A dangling `~` not followed by `0` or `1` is a `PointerError`.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
